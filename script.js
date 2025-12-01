@@ -3,15 +3,15 @@
 // =========================================================
 // 🚨 [중요] 1단계에서 복사한 본인의 키값으로 아래 내용을 바꿔주세요!
 // =========================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyD4m17c3vdKM4p1c0sp0CJ6fetUwf5A0xA",
-  authDomain: "pharmacy-sch-251127.firebaseapp.com",
-  projectId: "pharmacy-sch-251127",
-  storageBucket: "pharmacy-sch-251127.firebasestorage.app",
-  messagingSenderId: "1028219799154",
-  appId: "1:1028219799154:web:669dc1a10e7a1f5f8f64eb"
-};
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDpzsY9Tl_D23NdFDhz2YlcvICH8ucOCTs",
+  authDomain: "pharmacy-md1st.firebaseapp.com",
+  projectId: "pharmacy-md1st",
+  storageBucket: "pharmacy-md1st.firebasestorage.app",
+  messagingSenderId: "914734591634",
+  appId: "1:914734591634:web:3c5b961aaf9a982e1b804b"
+};
 
 
 // --- 파이어베이스 초기화 ---
@@ -468,4 +468,5 @@ window.onclick = function(e) {
     if (e.target == statsModal) closeStatsModal();
     if (e.target == pwModal) closePasswordModal();
     if (e.target == settingsModal) closeSettingsModal();
+
 }

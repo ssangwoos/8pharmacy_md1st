@@ -14,7 +14,6 @@ const firebaseConfig = {
 };
 
 
-
 // --- 파이어베이스 초기화 ---
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -304,16 +303,16 @@ function openSettingsModal() {
 }
 function closeSettingsModal() { settingsModal.style.display = 'none'; }
 function renderSettingsEmployees() {
-    const listDiv = document.getElementById('settings-emp-list');
+    const listDiv = document.getElementById('settings-emp-list'); 
     listDiv.innerHTML = "";
     
     employees.forEach((emp) => {
-        const div = document.createElement('div');
+        const div = document.createElement('div'); 
         div.className = 'emp-manage-item';
-        // 수정 포인트: 이름을 input text로 변경 + onchange 이벤트 추가
+        // ★ input type="color" 대신 div로 만들고 클릭 시 모달 열기
         div.innerHTML = `
-            <input type="color" value="${emp.color}" onchange="updateEmpColor('${emp.id}', this.value)" style="width:40px; height:40px; border:none; background:none; cursor:pointer;">
-            <input type="text" value="${emp.name}" onchange="updateEmpName('${emp.id}', this.value)" style="flex:1; margin:0 10px; padding:5px; border:1px solid #ddd; border-radius:4px;">
+            <div onclick="openColorModal('${emp.id}', 'edit')" style="width:40px; height:40px; background-color:${emp.color}; border-radius:6px; cursor:pointer; border:1px solid #ddd; flex-shrink:0;"></div>
+            <input type="text" value="${emp.name}" onchange="updateEmpName('${emp.id}', this.value)" style="flex:1; margin:0 10px;">
             <button class="btn-sm-del" onclick="deleteEmployee('${emp.id}')">삭제</button>
         `;
         listDiv.appendChild(div);
@@ -487,4 +486,59 @@ window.onclick = function(e) {
     if (e.target == statsModal) closeStatsModal();
     if (e.target == pwModal) closePasswordModal();
     if (e.target == settingsModal) closeSettingsModal();
+}
+
+// ==========================================
+// 🎨 커스텀 색상 선택기 로직 (새로 추가됨)
+// ==========================================
+const colorModal = document.getElementById('color-picker-modal');
+const paletteGrid = document.getElementById('color-palette-grid');
+
+// 예쁜 파스텔톤 + 원색 30가지 색상표
+const presetColors = [
+    "#ff6b6b", "#feca57", "#1dd1a1", "#5f27cd", "#54a0ff", 
+    "#ff9ff3", "#f368e0", "#00d2d3", "#2e86de", "#ff4757",
+    "#badc58", "#6ab04c", "#e056fd", "#686de0", "#30336b",
+    "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6",
+    "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
+    "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f39c12"
+];
+
+let targetEmpId = null; // 색상을 바꿀 직원 ID
+
+function openColorModal(empId) {
+    targetEmpId = empId;
+    
+    // 색상표 생성
+    paletteGrid.innerHTML = "";
+    presetColors.forEach(color => {
+        const circle = document.createElement('div');
+        circle.className = 'color-swatch';
+        circle.style.backgroundColor = color;
+        circle.onclick = () => selectColor(color);
+        paletteGrid.appendChild(circle);
+    });
+    
+    colorModal.style.display = 'flex'; // 모바일 중앙 정렬 위해 flex
+}
+
+function closeColorModal() {
+    colorModal.style.display = 'none';
+}
+
+// script.js 맨 아래 selectColor 함수 교체
+
+function selectColor(color) {
+    if (targetEmpId === 'new') {
+        // [신규] 직원 추가용 색상 선택일 때
+        // 1. 눈에 보이는 네모칸 색 바꾸기
+        document.getElementById('new-emp-color-div').style.backgroundColor = color;
+        // 2. 숨겨진 값(DB로 보낼 값) 바꾸기
+        document.getElementById('new-emp-color').value = color;
+    } else if (targetEmpId) {
+        // [기존] 직원 색상 변경일 때
+        updateEmpColor(targetEmpId, color);
+    }
+    
+    closeColorModal();
 }
